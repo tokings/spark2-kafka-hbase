@@ -1,6 +1,5 @@
 package com.hncy58.spark2.hbase;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,12 +38,12 @@ public class StreamingToHBaseApp {
 	private static final Logger log = LoggerFactory.getLogger(StreamingToHBaseApp.class);
 
 	private static transient final AtomicLong incr = new AtomicLong(0);
-
-	public static String ZK_SERVERS = "192.168.144.128";
+	
+	public static String ZK_SERVERS = "162.16.6.180,162.16.6.181,162.16.6.182";
 	public static String ZK_PORT = "2181";
 
-	public static String KAFKA_SERVERS = "192.168.144.128:9092";
-	private static String TOPIC_NAME = "test-topic-1";
+	public static String KAFKA_SERVERS = "162.16.6.180:9092,162.16.6.181:9092,162.16.6.182:9092";
+	private static String TOPIC_NAME = "test-topic-3";
 	private static String KAFKA_GROUP = "KafkaToHBaseGroup";
 
 	private static String SPARK_APP_NAME = StreamingToHBaseApp.class.getSimpleName();
@@ -58,7 +57,7 @@ public class StreamingToHBaseApp {
 	private static int agentSourceType = 2;
 	private static int agentDestType = 2;
 
-	public static void main(String[] args) {
+public static void main(String[] args) {
 		
 		log.info("ARGS:KAFKA_SERVERS TOPIC_NAME KAFKA_GROUP ZK_SERVERS ZK_PORT SPARK_APP_NAME SPARK_MASTER BATCH_DURATION");
 		log.info("eg:{} {} {} {} {} {} {} {}", KAFKA_SERVERS, TOPIC_NAME, KAFKA_GROUP, ZK_SERVERS, ZK_PORT, SPARK_APP_NAME, SPARK_MASTER, BATCH_DURATION);
@@ -127,7 +126,7 @@ public class StreamingToHBaseApp {
 		// 处理数据，更新/插入到HBase表
 		stream.foreachRDD(rdd -> {
 			// 更新服务状态
-			boolean ret = ServerStatusReportUtil.reportSvrStatus(agentSvrName, agentSvrGroup, agentSvrType, 1);
+			boolean ret = ServerStatusReportUtil.reportSvrStatus(agentSvrName, agentSvrGroup, agentSvrType, 1, "上报心跳");
 			log.error("上报服务状态：" + ret);
 
 			OffsetRange[] offsetRanges = ((HasOffsetRanges) rdd.rdd()).offsetRanges();
@@ -182,9 +181,9 @@ public class StreamingToHBaseApp {
 
 		// 更新服务状态
 		try {
-			boolean ret = ServerStatusReportUtil.reportSvrStatus(agentSvrName, agentSvrGroup, agentSvrType, 0);
+			boolean ret = ServerStatusReportUtil.reportSvrStatus(agentSvrName, agentSvrGroup, agentSvrType, 0, "检测服务中断信号，更新为下线状态");
 			log.info("更新服务状态下线：" + ret);
-		} catch (SQLException e1) {
+		} catch (Exception e1) {
 			log.error(e1.getMessage(), e1);
 		}
 	}

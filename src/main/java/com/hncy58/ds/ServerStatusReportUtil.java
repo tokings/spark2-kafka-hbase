@@ -42,10 +42,10 @@ public class ServerStatusReportUtil {
 		return -1;
 	}
 	
-	public static boolean reportSvrStatus(String agentSvrName, String agentSvrGroup, int agentSvrType, int status)
+	public static boolean reportSvrStatus(String agentSvrName, String agentSvrGroup, int agentSvrType, int status, String remark)
 			throws SQLException {
-		String updateSql = "update agent_svr_info set status = ?, update_time = now() where svr_name = ? and svr_group = ? and svr_type = ?";
-		int ret = DSPoolUtil.update(updateSql, status, agentSvrName, agentSvrGroup, agentSvrType);
+		String updateSql = "update agent_svr_info set status = ?, remark = ?, update_time = now() where svr_name = ? and svr_group = ? and svr_type = ?";
+		int ret = DSPoolUtil.update(updateSql, status, remark, agentSvrName, agentSvrGroup, agentSvrType);
 		return ret > 0;
 	}
 
