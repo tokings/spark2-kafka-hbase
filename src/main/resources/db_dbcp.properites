@@ -1,0 +1,9 @@
+driverClass=com.mysql.jdbc.Driver
+url=jdbc:mysql://10.0.38.156:3306/bigdata?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+username=tokings
+password=19890625
+initialSize=5
+maxTotal=20
+maxIdle=10
+minIdle=3
+maxWaitMillis=6000
